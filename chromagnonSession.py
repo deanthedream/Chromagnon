@@ -37,5 +37,46 @@ def main():
     for command in sessionCommand:
         print command
 
+def runMain(fullFilePath):
+    """Simply takes in a full file path to the 
+    Current Session file and returns a list
+    Args:
+        fullFilePath (string) - the full file path to the Current Session File
+    Returns:
+        cmds (list) - the full unaltered list of files and such
+    """
+    snss = chromagnon.SNSSParse.parse(fullFilePath)
+    sessionCommand = chromagnon.sessionParse.parse(snss)
+    cmds = list()
+    for command in sessionCommand:
+        cmds.append(str(command))
+    return cmds
+
+def parseCMDS(cmds):
+    """ This parses each string of cmds (from runMain)
+    Args:
+        cmds (list) -  list of commands and stuff
+    Returns:
+        htmlList (list) - list of html Strings
+    """
+    htmlList = list()
+    for cmd in cmds:
+        if 'Url: ' in cmd: #aha! we have an element with a URL in it
+            sInd = cmd.find('Url: ')
+            htmlList.append(cmd[sInd+5:])
+        else:
+            print(cmd)
+            pass
+
+    return htmlList
+
+def printHTMLlistToFile(htmlList):
+    """
+    """
+    with open('/home/dean/SavedSession.txt', 'w') as f:
+        for line in htmlList:
+            f.write("%s\n" % line )
+
+
 if __name__ == "__main__":
     main()
